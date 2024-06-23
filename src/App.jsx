@@ -46,7 +46,7 @@ export default function MoneySplitApp() {
 	}
 
 	const splitRemainderEqually = () => {
-    const updatedPeople = [...people];
+    const updatedPeople = [...people]; // Assuming people is a state variable or accessible array
     const remainder = amount - grandTotal;
     
     if (remainder > 0 && updatedPeople.length > 0) {
@@ -56,21 +56,27 @@ export default function MoneySplitApp() {
         updatedPeople.forEach((person, index) => {
             let additionalAmount = remainderPerPerson;
             
+            // Round additionalAmount to two decimal places
+            additionalAmount = Number(additionalAmount.toFixed(2));
+            
             // Add remainderPerPerson to each person's amountToPay
             if (index === updatedPeople.length - 1) {
-                // Adjust the last person to account for any rounding errors
-                additionalAmount += remainder - totalAdjusted;
+                // Adjust the last person to ensure the total matches the remainder
+                additionalAmount = remainder - totalAdjusted;
             }
             
-            // Round to two decimal places
+            // Round to two decimal places and update amountToPay
             person.amountToPay = (parseFloat(person.amountToPay) + additionalAmount).toFixed(2);
-            totalAdjusted += additionalAmount; // Update totalAdjusted
+            
+            // Update totalAdjusted with the rounded additionalAmount
+            totalAdjusted += additionalAmount;
         });
     }
     
-    setPeople(updatedPeople);
-    updateGrandTotal(updatedPeople);
+    setPeople(updatedPeople); // Assuming setPeople updates the state with updatedPeople
+    updateGrandTotal(updatedPeople); // Assuming updateGrandTotal updates the grandTotal based on updatedPeople
 };
+
 
 
 
@@ -131,7 +137,12 @@ export default function MoneySplitApp() {
 
 	const handlePersonChange = (index, key, value) => {
 		const updatedPeople = [...people];
-		updatedPeople[index][key] = value;
+
+		if (index === 'amountToPay') {
+			value = (value === '') ? 0 : value;
+		}
+		
+		updatedPeople[index][key] = (value === '') ? 0 : value;
 
 		setPeople(updatedPeople);
 		updateGrandTotal(updatedPeople);
@@ -151,7 +162,7 @@ export default function MoneySplitApp() {
 		<Container className="mt-5">
 			<h2 className="mb-4 text-center">Bill Split App</h2>
 			<Row className="mb-3">
-			<Col xs={12} md={6} lg={3} >
+			<Col xs={12} md={6} lg={3} className='mb-2'>
 				<InputGroup>
 					<InputGroup.Text>
 						<i className="bi bi-vector-pen"></i>
@@ -220,12 +231,12 @@ export default function MoneySplitApp() {
 				&&
 				<>
 
-					<Table id='downloadImg' responsive>
+					<Table id='downloadImg' responsive="sm">
 						<thead>
 							<tr>
 								<th>Person Name</th>
 								<th>Amount to Pay</th>
-								<th>Notes</th>
+								{/* <th>Notes</th> */}
 							</tr>
 						</thead>
 						<tbody>
@@ -246,14 +257,14 @@ export default function MoneySplitApp() {
 											onChange={(e) => handlePersonChange(index, 'amountToPay', e.target.value)}
 										/>
 									</td>
-									<td>
+									{/* <td>
 										<Form.Control
 											type="text"
 											value={person.note}
 											placeholder='Optional Notes'
 											onChange={(e) => handlePersonChange(index, 'note', e.target.value)}
 										/>
-									</td>
+									</td> */}
 								</tr>
 							))}
 						</tbody>
@@ -261,23 +272,28 @@ export default function MoneySplitApp() {
 						<tr>
 								<td className={grandTotal !== parseFloat(amount).toFixed(2) ? 'text-danger fw-bold' : ''}>
 										{titleText && `${titleText} - `}Grand Total 
-										{grandTotal !== parseFloat(amount).toFixed(2) && ' Amount differs from bill amount'}
+										{grandTotal !== parseFloat(amount).toFixed(2) && ` Amount differs from bill amount (${amount})`}
 								</td>
 								<td className={grandTotal !== parseFloat(amount).toFixed(2) ? 'text-danger fw-bold' : ''}>
 										$ {grandTotal}
 								</td>
+								{/* <td></td> */}
 						</tr>
 						</tfoot>
 					</Table>
 
-					<Button onClick={downloadImg}>
-						Share Split Amount
-					</Button>
-					{grandTotal < amount && (
-					<Button onClick={splitRemainderEqually}>
-							Split Remainder Equally
-					</Button>
-			)}
+					<div className="d-flex flex-wrap justify-content-center">
+    <Button onClick={downloadImg} className="m-2">
+        Share Split Amount
+    </Button>
+
+    {grandTotal < amount && (
+        <Button onClick={splitRemainderEqually} className="m-2">
+            Split Remainder Equally
+        </Button>
+    )}
+</div>
+
 
 				</>
 
