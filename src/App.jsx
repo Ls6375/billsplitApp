@@ -282,7 +282,7 @@ export default function MoneySplitApp() {
 						</tfoot>
 					</Table>
 
-					<div className="d-flex flex-wrap justify-content-center">
+					<div className="d-flex flex-wrap justify-content-center mb-4">
     <Button onClick={downloadImg} className="m-2">
         Share Split Amount
     </Button>
@@ -298,8 +298,6 @@ export default function MoneySplitApp() {
 				</>
 
 			}
-
-
 
 			<datalist id="predefined-names">
 				{predefinedNames.map((name, index) => (
