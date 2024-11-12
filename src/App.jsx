@@ -236,7 +236,7 @@ export default function MoneySplitApp() {
 							<tr>
 								<th>Person Name</th>
 								<th>Amount to Pay</th>
-								{/* <th>Notes</th> */}
+								<th>Reset</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -257,6 +257,18 @@ export default function MoneySplitApp() {
 											onChange={(e) => handlePersonChange(index, 'amountToPay', e.target.value)}
 										/>
 									</td>
+									<td>
+										<button 
+										  className="btn btn-sm btn-primary"
+                      type="button"
+                      aria-label="Reset"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+											onClick={(e) => handlePersonChange(index, 'amountToPay', 0)}
+										>
+												RESET
+										</button>
+									</td>
 									{/* <td>
 										<Form.Control
 											type="text"
@@ -272,7 +284,7 @@ export default function MoneySplitApp() {
 						<tr>
 								<td className={grandTotal !== parseFloat(amount).toFixed(2) ? 'text-danger fw-bold' : ''}>
 										{titleText && `${titleText} - `}Grand Total 
-										{grandTotal !== parseFloat(amount).toFixed(2) && ` Amount differs from bill amount (${amount})`}
+										{grandTotal !== parseFloat(amount).toFixed(2) && ` Amount differs by  ${ parseFloat(amount).toFixed(2) - parseFloat(grandTotal)} bill amount (${amount})`}
 								</td>
 								<td className={grandTotal !== parseFloat(amount).toFixed(2) ? 'text-danger fw-bold' : ''}>
 										$ {grandTotal}
