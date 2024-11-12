@@ -287,7 +287,7 @@ export default function MoneySplitApp() {
         Share Split Amount
     </Button>
 
-    {grandTotal < amount && (
+            {parseFloat(grandTotal)  < parseFloat(amount) && (
         <Button onClick={splitRemainderEqually} className="m-2">
             Split Remainder Equally
         </Button>
